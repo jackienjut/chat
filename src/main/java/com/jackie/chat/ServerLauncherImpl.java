@@ -1,7 +1,6 @@
 package com.jackie.chat;
 
 import net.openmob.mobileimsdk.server.ServerLauncher;
-import net.openmob.mobileimsdk.server.qos.QoS4ReciveDaemonC2S;
 import net.openmob.mobileimsdk.server.qos.QoS4SendDaemonS2C;
 
 import java.io.IOException;
@@ -12,23 +11,6 @@ import java.io.IOException;
 public class ServerLauncherImpl extends ServerLauncher {
 
     private static ServerLauncherImpl instance = null;
-
-/*
-
-    static
-    {
-        ServerLauncher.appKey = "5418023dfd98c579b6001741";
-
-        PORT = 7901;
-
-        QoS4SendDaemonS2C.getInstance().setDebugable(true);
-        QoS4ReciveDaemonC2S.getInstance().setDebugable(true);
-        ServerLauncher.debug = true;
-
-        ServerLauncher.bridgeEnabled = false;
-    }
-*/
-
 
     public static ServerLauncherImpl getInstance() throws IOException
     {
