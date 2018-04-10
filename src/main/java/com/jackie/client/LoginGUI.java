@@ -18,12 +18,12 @@ package com.jackie.client;
 import com.eva.epc.common.util.CommonUtils;
 import com.eva.epc.widget.HardLayoutPane;
 import com.jackie.client.toast.Toast;
+import io.netty.util.internal.StringUtil;
 import net.openmob.mobileimsdk.java.conf.ConfigEntity;
 import net.openmob.mobileimsdk.java.core.LocalUDPDataSender;
 import net.openmob.mobileimsdk.java.core.LocalUDPSocketProvider;
 import org.jb2011.lnf.beautyeye.ch3_button.BEButtonUI;
 
-import javax.annotation.Resource;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -31,14 +31,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 public class LoginGUI extends JFrame {
 
-    @Resource(name = "Thumbs.db")
-    private File d;
+
     private JTextField editServerIp = null;
     private JTextField editServerPort = null;
     private JTextField editLoginName = null;
@@ -73,11 +71,13 @@ public class LoginGUI extends JFrame {
         editServerPort = new JTextField(5);
         editServerIp.setForeground(new Color(13, 148, 252));
         editServerPort.setForeground(new Color(13, 148, 252));
-        editServerIp.setText("rbcore.52im.net");    // default value
+        editServerIp.setText("127.0.0.1");    // default value
         editServerPort.setText("7901");    // default value
-        btnLogin = new JButton("  登 陆  ");
+
+        btnLogin = new JButton("  Login  ");
         btnLogin.setUI(new BEButtonUI().setNormalColor(BEButtonUI.NormalColor.blue));
         btnLogin.setForeground(Color.white);
+
         editLoginName = new JTextField(30);
         editLoginPsw = new JPasswordField(30);
 
@@ -100,29 +100,24 @@ public class LoginGUI extends JFrame {
         mainPanel.addTitledLineSeparator("");
         JPanel btnAndVerPanel = new JPanel();
         btnAndVerPanel.setLayout(new BoxLayout(btnAndVerPanel, BoxLayout.LINE_AXIS));
-        JLabel lbVer = new JLabel("v3.2b180103.1");
+
+
+        //version number
+        JLabel lbVer = new JLabel("陆大大");
         lbVer.setForeground(new Color(184, 184, 184));
         btnAndVerPanel.add(lbVer);
+
+
         btnAndVerPanel.add(Box.createHorizontalGlue());
         btnAndVerPanel.add(btnLogin);
         mainPanel.addTo(btnAndVerPanel, 2, true);
 
-        // 下方的copyright面板
-        LineBorder bottomPabelTopBorder = new LineBorder(new Color(235, 235, 235)) {
-            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-                Color oldColor = g.getColor();
-                g.setColor(lineColor);
-                g.drawLine(x, y, width, y);
-                g.setColor(oldColor);
-            }
-        };
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(Color.white);
-        bottomPanel.setBorder(BorderFactory.createCompoundBorder(
-                bottomPabelTopBorder, BorderFactory.createEmptyBorder(5, 0, 5, 0)));
-        bottomPanel.add(
+
+     /*   bottomPanel.add(
                 new JLabel(new ImageIcon(LoginGUI.class.getClassLoader().getResource("copyright_img.png")))
-                , BorderLayout.CENTER);
+                , BorderLayout.CENTER);*/
 
         // 总体界面布局
         mainPanel.setBorder(BorderFactory.createEmptyBorder(4, 5, 4, 5));
@@ -136,6 +131,8 @@ public class LoginGUI extends JFrame {
         this.pack();
     }
 
+    // login butoon listener
+    // login in and exit this window
     private void initListeners() {
         btnLogin.addActionListener(new ActionListener() {
             @Override
@@ -193,11 +190,12 @@ public class LoginGUI extends JFrame {
      * 登陆处理。
      */
     private void doLogin() {
-        //** 设置服务器地址和端口号
+        //server address and prot
         String serverIP = editServerIp.getText();
         String serverPort = editServerPort.getText();
-        if (!CommonUtils.isStringEmpty(serverIP, true)
-                && !CommonUtils.isStringEmpty(serverPort, true)) {
+
+        if (!StringUtil.isNullOrEmpty(serverIP)
+                && !StringUtil.isNullOrEmpty(serverPort)) {
             // 无条件重置socket，防止首次登陆时用了错误的ip或域名，下次登陆时sendData中仍然使用老的ip
             // 说明：本行代码建议仅用于Demo时，生产环境下是没有意义的，因为你的APP里不可能连IP都搞错了
             LocalUDPSocketProvider.getInstance().closeLocalUDPSocket();
